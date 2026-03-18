@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <game>
     <head>
-        <title>SQL Island - The Escape Protocol</title>
-        <teaser>Nova and Archivist Lyra search the Adventurers&#x2019; Guild database to find the parts needed to escape SQL Island.</teaser>
-        <copyright>&#xA9; Insert copyright here</copyright>
+        <title>SQL Island - The Tool Belt</title>
+        <teaser>After an emergency landing, Nova must rebuild the lost tool belt using ARRAY operations.</teaser>
+        <copyright>© Insert copyright here</copyright>
+        <author>Kanhaiya Kanhaiya</author>
     </head>
+
     <scenes>
-        <manipulate-scene>
+
+<manipulate-scene>
             <text>Nova and Archivist Lyra open the Adventurers&#x2019; Guild database to investigate the malfunction in the escape system. Lyra explains that each adventurer&#x2019;s equipment is stored in an array column called inventory.
 
 Before they can locate the parts needed for the shuttle, they must first inspect the database.
@@ -19,7 +22,110 @@ FROM players;</sql-solution>
 FROM players;</sql-check>
             <sql-placeholder></sql-placeholder>
         </manipulate-scene>
+
+<manipulate-scene>
+<text>
+Nova wants to know how many tools each adventurer is carrying.
+
+Task:
+Display each player and the number of tools in their inventory.
+</text>
+<sql-solution>SELECT name, array_length(inventory,1) AS tool_count FROM players;</sql-solution>
+<sql-check>SELECT name, array_length(inventory,1) AS tool_count FROM players;</sql-check>
+</manipulate-scene>
+
+<manipulate-scene>
+<text>
+Nova searches for a toolkit to begin repairs.
+
+Task:
+Find players whose inventory contains 'toolkit'.
+</text>
+<sql-solution>SELECT name FROM players WHERE inventory @> ARRAY['toolkit'];</sql-solution>
+<sql-check>SELECT name FROM players WHERE inventory @> ARRAY['toolkit'];</sql-check>
+</manipulate-scene>
+
+<manipulate-scene>
+<text>
+Nova lays out all tools on the beach to organize them.
+
+Task:
+Unnest all inventories so each tool appears as a separate row.
+</text>
+<sql-solution>SELECT name, unnest(inventory) AS tool FROM players;</sql-solution>
+<sql-check>SELECT name, unnest(inventory) AS tool FROM players;</sql-check>
+</manipulate-scene>
+
+<manipulate-scene>
+<text>
+Nova picks up a repair kit and adds it to the tool belt.
+
+Task:
+Add 'repair_kit' to Borin's inventory.
+</text>
+<sql-solution>UPDATE players SET inventory = array_append(inventory,'repair_kit') WHERE name='Borin';</sql-solution>
+<sql-check>UPDATE players SET inventory = array_append(inventory,'repair_kit') WHERE name='Borin';</sql-check>
+</manipulate-scene>
+
+<manipulate-scene>
+<text>
+Nova finds multiple tools together and adds them at once.
+
+Task:
+Add 'engine_part' and 'toolkit' to Darius's inventory.
+</text>
+<sql-solution>UPDATE players SET inventory = inventory || ARRAY['engine_part','toolkit'] WHERE name='Darius';</sql-solution>
+<sql-check>UPDATE players SET inventory = inventory || ARRAY['engine_part','toolkit'] WHERE name='Darius';</sql-check>
+</manipulate-scene>
+
+<manipulate-scene>
+<text>
+Some tools are broken and must be removed from the tool belt.
+
+Task:
+Remove 'fuel_cell' from Aria's inventory.
+</text>
+<sql-solution>UPDATE players SET inventory = array_remove(inventory,'fuel_cell') WHERE name='Aria';</sql-solution>
+<sql-check>UPDATE players SET inventory = array_remove(inventory,'fuel_cell') WHERE name='Aria';</sql-check>
+</manipulate-scene>
+
+<manipulate-scene>
+<text>
+Nova upgrades an old tool with a better one.
+
+Task:
+Replace 'oxygen_tank' with 'advanced_oxygen_tank' in Ciri's inventory.
+</text>
+<sql-solution>UPDATE players SET inventory = array_replace(inventory,'oxygen_tank','advanced_oxygen_tank') WHERE name='Ciri';</sql-solution>
+<sql-check>UPDATE players SET inventory = array_replace(inventory,'oxygen_tank','advanced_oxygen_tank') WHERE name='Ciri';</sql-check>
+</manipulate-scene>
+
+<manipulate-scene>
+<text>
+Nova needs players who already have all essential tools.
+
+Task:
+Find players whose inventory contains 'engine_part', 'toolkit', and 'repair_kit'.
+</text>
+<sql-solution>SELECT name FROM players WHERE inventory @> ARRAY['engine_part','toolkit','repair_kit'];</sql-solution>
+<sql-check>SELECT name FROM players WHERE inventory @> ARRAY['engine_part','toolkit','repair_kit'];</sql-check>
+</manipulate-scene>
+
+<manipulate-scene>
+<text>
+Nova reviews the completed tool belt to ensure everything is ready for repair.
+
+Task:
+Display all players and their final inventories.
+</text>
+<sql-solution>SELECT name, inventory FROM players;</sql-solution>
+<sql-check>SELECT name, inventory FROM players;</sql-check>
+
+</manipulate-scene>
+
+
     </scenes>
+
     <initial-sql-script>
 -- SQL Island: The Escape Protocol
 -- Database setup for Eskuel Mission 1
@@ -37,5 +143,6 @@ INSERT INTO players VALUES
 (3, &#x27;Ciri&#x27;, 15, ARRAY[&#x27;repair_kit&#x27;,&#x27;oxygen_tank&#x27;,&#x27;toolkit&#x27;]),
 (4, &#x27;Darius&#x27;, 7, ARRAY[&#x27;oxygen_tank&#x27;,&#x27;fuel_cell&#x27;]),
 (5, &#x27;Lyra&#x27;, 20, ARRAY[&#x27;database_key&#x27;,&#x27;navigation_chip&#x27;,&#x27;repair_kit&#x27;]);
-</initial-sql-script>
+    </initial-sql-script>
+
 </game>
